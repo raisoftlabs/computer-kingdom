@@ -9,11 +9,9 @@
     <path
         android:fillColor="#22D3EE"
         android:pathData="M45,20h18v8H45z" />
-    <circle
+    <path
         android:fillColor="#22D3EE"
-        android:cx="54"
-        android:cy="15"
-        android:r="5" />
+        android:pathData="M54,10a5,5 0 1,1 0,10a5,5 0 1,1 0,-10" />
     <path
         android:fillColor="#0B1026"
         android:pathData="M38,44h10v10H38z" />
