@@ -3,6 +3,7 @@ package com.raisoftlabs.computerkingdom.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -56,7 +57,7 @@ fun KingdomButton(
 }
 
 @Composable
-fun PanelCard(modifier: Modifier = Modifier, containerColor: Color = Panel, content: @Composable () -> Unit) {
+fun PanelCard(modifier: Modifier = Modifier, containerColor: Color = Panel, content: @Composable ColumnScope.() -> Unit) {
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(22.dp),
