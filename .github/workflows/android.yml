@@ -1,0 +1,72 @@
+name: Build Computer Kingdom APK
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: computer-kingdom-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Unit tests
+        run: gradle :app:testDebugUnitTest --no-daemon --stacktrace
+
+      - name: Assemble debug APK
+        run: gradle :app:assembleDebug --no-daemon --stacktrace
+
+      - name: Collect APK
+        run: |
+          mkdir -p out
+          cp app/build/outputs/apk/debug/app-debug.apk out/ComputerKingdom-1.0.apk
+          ls -lh out
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: computer-kingdom-apk
+          path: out/ComputerKingdom-1.0.apk
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Publish download link
+        if: github.event_name != 'pull_request'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: Computer Kingdom v1.0.${{ github.run_number }}
+          make_latest: true
+          body: |
+            **Computer Kingdom 1.0** — a 2D educational adventure for children 7–10.
+
+            - Meet Byte and explore the kingdom map
+            - Learn CPU, RAM and storage through story and play
+            - Four touch-friendly mini-games with hints and retries
+            - Cards, stars, local progress and a parent area
+            - English and Bangla, offline, no ads or accounts
+
+            Install the APK directly on an Android 8.0+ device.
+          files: out/ComputerKingdom-1.0.apk
